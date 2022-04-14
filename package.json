@@ -1,6 +1,7 @@
 {
-  "name": "capacitor",
-  "private": true,
+  "name": "mrriver-capacitor",
+  "version": "1.0.1",
+  "private": false,
   "scripts": {
     "build:nativebridge": "lerna run build:nativebridge",
     "sync-peer-dependencies": "node scripts/sync-peer-dependencies.mjs",

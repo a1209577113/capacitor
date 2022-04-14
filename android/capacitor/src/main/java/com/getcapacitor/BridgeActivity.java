@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import com.getcapacitor.android.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,11 +13,11 @@ public class BridgeActivity extends AppCompatActivity {
 
     protected Bridge bridge;
     protected boolean keepRunning = true;
-    protected CapConfig config;
+    private CapConfig config;
 
-    protected int activityDepth = 0;
-    protected List<Class<? extends Plugin>> initialPlugins = new ArrayList<>();
-    protected final Bridge.Builder bridgeBuilder = new Bridge.Builder(this);
+    private int activityDepth = 0;
+    private List<Class<? extends Plugin>> initialPlugins = new ArrayList<>();
+    private final Bridge.Builder bridgeBuilder = new Bridge.Builder(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class BridgeActivity extends AppCompatActivity {
         this.load();
     }
 
-    protected void load() {
+    private void load() {
         Logger.debug("Starting BridgeActivity");
 
         bridge = bridgeBuilder.addPlugins(initialPlugins).setConfig(config).create();

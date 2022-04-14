@@ -1,6 +1,6 @@
 package com.getcapacitor;
 
-import android.webkit.WebView;
+import com.tencent.smtt.sdk.WebView;
 
 /**
  * Provides callbacks associated with the {@link BridgeWebViewClient}

@@ -18,12 +18,13 @@ package com.getcapacitor;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Base64;
-import android.webkit.CookieManager;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
+import com.tencent.smtt.sdk.CookieManager;
+import com.tencent.smtt.export.external.interfaces.WebResourceRequest;
+import com.tencent.smtt.export.external.interfaces.WebResourceResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -38,8 +39,8 @@ import java.util.Map;
  * Same-Origin policy.
  * <p>
  * This class is intended to be used from within the
- * {@link android.webkit.WebViewClient#shouldInterceptRequest(android.webkit.WebView, String)} and
- * {@link android.webkit.WebViewClient#shouldInterceptRequest(android.webkit.WebView,
+ * {@link com.tencent.smtt.sdk.WebViewClient#shouldInterceptRequest(android.webkit.WebView, String)} and
+ * {@link com.tencent.smtt.sdk.WebViewClient#shouldInterceptRequest(android.webkit.WebView,
  * android.webkit.WebResourceRequest)}
  * methods.
  */
@@ -156,7 +157,7 @@ public class WebViewLocalServer {
     /**
      * Attempt to retrieve the WebResourceResponse associated with the given <code>request</code>.
      * This method should be invoked from within
-     * {@link android.webkit.WebViewClient#shouldInterceptRequest(android.webkit.WebView,
+     * {@link com.tencent.smtt.sdk.WebViewClient#shouldInterceptRequest(android.webkit.WebView,
      * android.webkit.WebResourceRequest)}.
      *
      * @param request the request to process.
@@ -255,10 +256,6 @@ public class WebViewLocalServer {
             InputStream responseStream;
             try {
                 String startPath = this.basePath + "/index.html";
-                if (bridge.getRouteProcessor() != null) {
-                    startPath = this.basePath + bridge.getRouteProcessor().process("/index.html");
-                }
-
                 if (isAsset) {
                     responseStream = protocolHandler.openAsset(startPath);
                 } else {
@@ -470,13 +467,6 @@ public class WebViewLocalServer {
             public InputStream handle(Uri url) {
                 InputStream stream = null;
                 String path = url.getPath();
-
-                // Pass path to routeProcessor if present
-                RouteProcessor routeProcessor = bridge.getRouteProcessor();
-                if (routeProcessor != null) {
-                    path = bridge.getRouteProcessor().process(path);
-                }
-
                 try {
                     if (path.startsWith(capacitorContentStart)) {
                         stream = protocolHandler.openContentUrl(url);

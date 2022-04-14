@@ -13,9 +13,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.webkit.ValueCallback;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
+import com.tencent.smtt.sdk.ValueCallback;
+import com.tencent.smtt.sdk.WebSettings;
+import com.tencent.smtt.sdk.WebView;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
@@ -129,9 +129,6 @@ public class Bridge {
 
     // A list of listeners that trigger when webView events occur
     private List<WebViewListener> webViewListeners = new ArrayList<>();
-
-    // An interface to manipulate route resolving
-    private RouteProcessor routeProcessor;
 
     /**
      * Create the Bridge with a reference to the main {@link Activity} for the
@@ -425,7 +422,7 @@ public class Bridge {
         settings.setMediaPlaybackRequiresUserGesture(false);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         if (this.config.isMixedContentAllowed()) {
-            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            settings.setMixedContentMode(0);
         }
 
         String appendUserAgent = this.config.getAppendedUserAgentString();
@@ -1193,14 +1190,6 @@ public class Bridge {
         this.webViewListeners = webViewListeners;
     }
 
-    RouteProcessor getRouteProcessor() {
-        return routeProcessor;
-    }
-
-    void setRouteProcessor(RouteProcessor routeProcessor) {
-        this.routeProcessor = routeProcessor;
-    }
-
     /**
      * Add a listener that the WebViewClient can trigger on certain events.
      * @param webViewListener A {@link WebViewListener} to add.
@@ -1224,7 +1213,6 @@ public class Bridge {
         private List<Class<? extends Plugin>> plugins = new ArrayList<>();
         private AppCompatActivity activity;
         private Fragment fragment;
-        private RouteProcessor routeProcessor;
         private final List<WebViewListener> webViewListeners = new ArrayList<>();
 
         public Builder(AppCompatActivity activity) {
@@ -1277,11 +1265,6 @@ public class Bridge {
             return this;
         }
 
-        public Builder setRouteProcessor(RouteProcessor routeProcessor) {
-            this.routeProcessor = routeProcessor;
-            return this;
-        }
-
         public Bridge create() {
             // Cordova initialization
             ConfigXmlParser parser = new ConfigXmlParser();
@@ -1305,7 +1288,6 @@ public class Bridge {
             Bridge bridge = new Bridge(activity, fragment, webView, plugins, cordovaInterface, pluginManager, preferences, config);
             bridge.setCordovaWebView(mockWebView);
             bridge.setWebViewListeners(webViewListeners);
-            bridge.setRouteProcessor(routeProcessor);
 
             if (instanceState != null) {
                 bridge.restoreInstanceState(instanceState);

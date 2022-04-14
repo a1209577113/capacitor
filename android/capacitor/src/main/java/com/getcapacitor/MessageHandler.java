@@ -1,7 +1,7 @@
 package com.getcapacitor;
 
 import android.webkit.JavascriptInterface;
-import android.webkit.WebView;
+import com.tencent.smtt.sdk.WebView;
 import org.apache.cordova.PluginManager;
 
 /**

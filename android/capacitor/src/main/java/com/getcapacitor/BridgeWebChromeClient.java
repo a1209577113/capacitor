@@ -11,15 +11,12 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
-import android.webkit.ConsoleMessage;
-import android.webkit.GeolocationPermissions;
-import android.webkit.JsPromptResult;
-import android.webkit.JsResult;
-import android.webkit.MimeTypeMap;
-import android.webkit.PermissionRequest;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
+import com.tencent.smtt.export.external.interfaces.*;
+import com.tencent.smtt.sdk.MimeTypeMap;
+import com.tencent.smtt.export.external.interfaces.PermissionRequest;
+import com.tencent.smtt.sdk.ValueCallback;
+import com.tencent.smtt.sdk.WebChromeClient;
+import com.tencent.smtt.sdk.WebView;
 import android.widget.EditText;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -60,7 +57,9 @@ public class BridgeWebChromeClient extends WebChromeClient {
             if (permissionListener != null) {
                 boolean granted = true;
                 for (Map.Entry<String, Boolean> permission : isGranted.entrySet()) {
-                    if (!permission.getValue()) granted = false;
+                    if (!permission.getValue()) {
+                        granted = false;
+                    }
                 }
                 permissionListener.onPermissionSelect(granted);
             }
@@ -84,10 +83,10 @@ public class BridgeWebChromeClient extends WebChromeClient {
      * Both this method and {@link #onHideCustomView()} are required for
      * rendering web content in full screen.
      *
-     * @see <a href="https://developer.android.com/reference/android/webkit/WebChromeClient#onShowCustomView(android.view.View,%20android.webkit.WebChromeClient.CustomViewCallback)">onShowCustomView() docs</a>
+     * @see <a href="https://developer.android.com/reference/android/webkit/WebChromeClient#onShowCustomView(android.view.View,%20com.tencent.smtt.sdk.WebChromeClient.CustomViewCallback)">onShowCustomView() docs</a>
      */
     @Override
-    public void onShowCustomView(View view, CustomViewCallback callback) {
+    public void onShowCustomView(View view, IX5WebChromeClient.CustomViewCallback callback) {
         callback.onCustomViewHidden();
         super.onShowCustomView(view, callback);
     }
@@ -274,7 +273,7 @@ public class BridgeWebChromeClient extends WebChromeClient {
      * @param callback
      */
     @Override
-    public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+    public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissionsCallback callback) {
         super.onGeolocationPermissionsShowPrompt(origin, callback);
         Logger.debug("onGeolocationPermissionsShowPrompt: DOING IT HERE FOR ORIGIN: " + origin);
         final String[] geoPermissions = { Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION };
